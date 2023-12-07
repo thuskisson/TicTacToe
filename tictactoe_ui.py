@@ -6,6 +6,26 @@ from PyQt6.QtGui import *
 from PyQt6.QtWidgets import *
 from tictactoe_game import Game
 
+class WinnerDialog(QDialog):
+    def __init__(self, winner):
+        super().__init__()
+
+        self.setWindowTitle(winner + ' has won!')
+
+        # OK button to play again, cancel button to not play again
+        qbtn = QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel
+        self.buttonBox = QDialogButtonBox(qbtn)
+        # These are built into the dialog, and we'll check for OK
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        # show the dialog
+        self.layout = QVBoxLayout()
+        lbl = QLabel("Congratulations " + winner + ". New Game?")
+        self.layout.addWidget(lbl)
+        self.layout.addWidget(self.buttonBox)
+        self.setLayout(self.layout)
+
 
 class MainWindow(QWidget):
     def __init__(self, parent = None):
@@ -44,6 +64,20 @@ class MainWindow(QWidget):
                 elif self.game.board[c][r] == 'O':
                     self.drawO(qp, c, r, colsize, rowsize)
                     
+    def drawX(self, qp, c, r, colsize, rowsize):
+        x = colsize + c*colsize
+        y = rowsize + r*rowsize
+        # Draw two diagonal lines in this cell
+        qp.drawLine(x, y, x+colsize, y+rowsize)
+        qp.drawLine(x+colsize, y, x, y+rowsize)
+
+    def drawO(self, qp, c, r, colsize, rowsize):
+        x = colsize + c*colsize
+        y = rowsize + r*rowsize
+        # draw an ellipse in this cell
+        qp.drawEllipse(x,y,colsize, rowsize)
+
+
     #respond to mousepress events
     def mousePressEvent(self, event):
         # calculate the column width and row height
@@ -62,6 +96,13 @@ class MainWindow(QWidget):
         # force a repaint
         self.repaint()
 
+        winner = self.game.checkForWinner()
+        if winner != ' ':
+            # Declare a winner and see if they want to play again
+            dlg = WinnerDialog(winner)
+            if dlg.exec() == True:
+                # let's play again!
+                self.game.clearBoard()
 
 def main():
     app = QApplication([])
