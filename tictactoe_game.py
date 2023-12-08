@@ -47,8 +47,10 @@ class Game:
         if self.board[2][0] != ' ' and self.board[2][0] == self.board[1][1] and self.board[1][1] == self.board[0][2]:
             return self.board[2][0]
         
+        
         #no winner, keep playing
         self.gameOver = False
         return ' '
+    
 
 

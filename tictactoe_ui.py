@@ -99,7 +99,7 @@ class MainWindow(QWidget):
         winner = self.game.checkForWinner()
         if winner != ' ':
             # Declare a winner and see if they want to play again
-            dlg = WinnerDialog(winner)
+            dlg = WinnerDialog(winner) 
             if dlg.exec() == True:
                 # let's play again!
                 self.game.clearBoard()
