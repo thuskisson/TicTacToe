@@ -6,6 +6,8 @@ from PyQt6.QtGui import *
 from PyQt6.QtWidgets import *
 from tictactoe_game import Game
 
+## Code
+
 class WinnerDialog(QDialog):
     def __init__(self, winner):
         super().__init__()
